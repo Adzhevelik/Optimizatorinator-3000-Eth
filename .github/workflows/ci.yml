@@ -101,11 +101,39 @@ jobs:
           script: |
             set -e
 
+            apt-get update
+            apt-get install -y git curl ca-certificates
+
+            if ! command -v docker >/dev/null 2>&1; then
+              install -m 0755 -d /etc/apt/keyrings
+              curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+              chmod a+r /etc/apt/keyrings/docker.asc
+
+              echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo ${UBUNTU_CODENAME:-$VERSION_CODENAME}) stable" > /etc/apt/sources.list.d/docker.list
+
+              apt-get update
+              apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            fi
+
+            mkdir -p /opt/optimizatorinator
+
+            if [ ! -d /opt/optimizatorinator/.git ]; then
+              rm -rf /opt/optimizatorinator/*
+              git clone https://github.com/${{ github.repository }}.git /opt/optimizatorinator
+            fi
+
             cd /opt/optimizatorinator
 
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            git fetch origin main
+            git reset --hard origin/main
 
-            git pull origin main
+            mkdir -p data models backend
+
+            if [ ! -f backend/.env ]; then
+              touch backend/.env
+            fi
+
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             export REGISTRY=ghcr.io/adzhevelik
             export IMAGE_TAG=${{ github.sha }}
