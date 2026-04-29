@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  REGISTRY: ghcr.io/${{ github.repository_owner }}
+  REGISTRY: ghcr.io/adzhevelik
 
 jobs:
   test:
@@ -29,14 +29,6 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest httpx
-
-      - name: Debug import
-        working-directory: backend
-        run: python -c "from api.main import app; print('import ok')"
-
-      - name: Debug collect
-        working-directory: backend
-        run: pytest tests/ --collect-only 2>&1 || true
 
       - name: Run tests
         working-directory: backend
@@ -94,6 +86,7 @@ jobs:
     needs: build-and-push
     if: github.ref == 'refs/heads/main'
     environment: production
+    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v4
@@ -110,7 +103,7 @@ jobs:
             echo "${{ secrets.GITHUB_TOKEN }}" | \
               docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            export REGISTRY=${{ env.REGISTRY }}
+            export REGISTRY=ghcr.io/adzhevelik
             export IMAGE_TAG=${{ github.sha }}
 
             docker compose pull
