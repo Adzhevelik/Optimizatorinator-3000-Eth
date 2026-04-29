@@ -1,0 +1,26 @@
+
+@"
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+backend/.env
+frontend/.env
+.env
+
+data/*.csv
+models/*.joblib
+
+frontend/node_modules/
+frontend/build/
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+"@ | Out-File -FilePath .gitignore -Encoding utf8
+Add-Content .gitignore "`ndata/*.pkl"

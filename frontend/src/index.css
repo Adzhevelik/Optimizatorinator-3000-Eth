@@ -1,0 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Courier New', monospace;
+  background-color: #ffffff;
+  color: #000000;
+  line-height: 1.6;
+}
+
+#root {
+  min-height: 100vh;
+}
