@@ -34,9 +34,13 @@ jobs:
         working-directory: backend
         run: python -c "from api.main import app; print('import ok')"
 
+      - name: Debug collect
+        working-directory: backend
+        run: pytest tests/ --collect-only 2>&1 || true
+
       - name: Run tests
         working-directory: backend
-        run: pytest tests/ -v --tb=long -p no:warnings
+        run: pytest tests/ -v --tb=long 2>&1
 
   build-and-push:
     name: Build & Push Images
