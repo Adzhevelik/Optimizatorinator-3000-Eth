@@ -32,7 +32,7 @@ jobs:
 
       - name: Run tests
         working-directory: backend
-        run: pytest tests/ -v --tb=short
+        run: pytest tests/ -v --tb=long -p no:warnings
 
   build-and-push:
     name: Build & Push Images
