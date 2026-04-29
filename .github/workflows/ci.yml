@@ -30,6 +30,10 @@ jobs:
           pip install -r requirements.txt
           pip install pytest httpx
 
+      - name: Debug import
+        working-directory: backend
+        run: python -c "from api.main import app; print('import ok')"
+
       - name: Run tests
         working-directory: backend
         run: pytest tests/ -v --tb=long -p no:warnings
