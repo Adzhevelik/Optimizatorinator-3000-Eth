@@ -9,8 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from api.main import app
 
-client = TestClient(app, raise_server_exceptions=False)
-
+client = TestClient(app)
 
 def make_gas_df(n=300):
     return pd.DataFrame({
@@ -222,4 +221,3 @@ class TestNetworkStatsMocked:
     def test_pending_queue_present(self):
         with patch("api.main.predictor.client", make_mock_network_client()):
             assert "pending_queue" in client.get("/api/network-stats").json()
-            
